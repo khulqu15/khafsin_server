@@ -18,7 +18,6 @@
                     <h2 class="text-xl font-bold">Options</h2>
                     <button class="btn btn-primary w-full text-white" onclick="window.location.href='{{ route('imu-web.export') }}'">Export to Excel</button>
                     <button class="btn btn-error w-full text-white" id="delete-all-btn">Delete All</button>
-                    <button class="btn btn-error w-full mt-3 text-white hidden" id="delete-spesific-btn">Delete Selected</button>
                 </div>
                 <div class="md:col-span-6 col-span-8">
                     <div class="flex items-center justify-between">
@@ -29,20 +28,20 @@
                             <thead>
                               <tr>
                                 <th></th>
-                                <th>Tanggal Waktu</th>
+                                <th>Datetime</th>
                                 <th>X</th>
                                 <th>Y</th>
                                 <th>Z</th>
-                                <th>Lokasi</th>
+                                <th>Location</th>
                                 <th>Kondisi</th>
-                                <th>Aksi</th>
+                                <th>Action</th>
                               </tr>
                             </thead>
                             <tbody>
                                 @forelse($imus as $imu)
                                   <tr data-id="{{ $imu->id }}">
+                                    {{-- <th>{{ $loop->iteration }}</th> --}}
                                     <th>
-                                        {{ $loop->iteration }}
                                         <input type="checkbox" id="delete-{{ $imu->id }}" class="button_del_checkbox">
                                     </th>
                                     <th>{{ $imu->created_at }}</th>
@@ -74,55 +73,11 @@
         });
         let selectedCheckbox = [];
         const classDeleteCheckbox = document.getElementsByClassName('button_del_checkbox');
-        let deleteSpesificBtn = document.getElementById('delete-spesific-btn');
-
-        console.log(classDeleteCheckbox)
-        if(classDeleteCheckbox.length > 0){
-            for (let i = 0; i < classDeleteCheckbox.length; i++) {
-                classDeleteCheckbox[i].addEventListener('change', function() {
-                    const id = parseInt(this.id.split('-')[1]);
-                    if (this.checked) {
-                        selectedCheckbox.push(id);
-                    } else {
-                        selectedCheckbox = selectedCheckbox.filter(item => item !== id);
-                    }
-                    if(selectedCheckbox.length > 0) {
-                        deleteSpesificBtn.classList.remove('hidden');
-                    } else {
-                        deleteSpesificBtn.classList.add('hidden');
-                    }
-                    console.log(selectedCheckbox);
-                });
-            }
-        }
-
-        deleteSpesificBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete selected records?')) {
-                fetch('{{ route("imu-web.delete-selected") }}', {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ ids: selectedCheckbox })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        selectedCheckbox.forEach(id => {
-                            const imuRow = document.querySelector(`tr[data-id="${id}"]`);
-                            if (imuRow) {
-                                imuRow.remove();
-                                deleteSpesificBtn.classList.add('hidden');
-                            }
-                        });
-                        alert(data.message);
-                    } else {
-                        alert('Error deleting records.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+        classDeleteCheckbox.addEventListener('click', function() {
+            if (this.checked) {
+                selectedCheckbox.push(this.id);
+            } else {
+                selectedCheckbox = selectedCheckbox.slice(selectedCheckbox.indexOf(this.id), 1);
             }
         });
 

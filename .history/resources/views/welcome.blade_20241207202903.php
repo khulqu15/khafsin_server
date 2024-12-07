@@ -29,13 +29,13 @@
                             <thead>
                               <tr>
                                 <th></th>
-                                <th>Tanggal Waktu</th>
+                                <th>Datetime</th>
                                 <th>X</th>
                                 <th>Y</th>
                                 <th>Z</th>
-                                <th>Lokasi</th>
+                                <th>Location</th>
                                 <th>Kondisi</th>
-                                <th>Aksi</th>
+                                <th>Action</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -74,8 +74,6 @@
         });
         let selectedCheckbox = [];
         const classDeleteCheckbox = document.getElementsByClassName('button_del_checkbox');
-        let deleteSpesificBtn = document.getElementById('delete-spesific-btn');
-
         console.log(classDeleteCheckbox)
         if(classDeleteCheckbox.length > 0){
             for (let i = 0; i < classDeleteCheckbox.length; i++) {
@@ -86,45 +84,10 @@
                     } else {
                         selectedCheckbox = selectedCheckbox.filter(item => item !== id);
                     }
-                    if(selectedCheckbox.length > 0) {
-                        deleteSpesificBtn.classList.remove('hidden');
-                    } else {
-                        deleteSpesificBtn.classList.add('hidden');
-                    }
                     console.log(selectedCheckbox);
                 });
             }
         }
-
-        deleteSpesificBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete selected records?')) {
-                fetch('{{ route("imu-web.delete-selected") }}', {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ ids: selectedCheckbox })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        selectedCheckbox.forEach(id => {
-                            const imuRow = document.querySelector(`tr[data-id="${id}"]`);
-                            if (imuRow) {
-                                imuRow.remove();
-                                deleteSpesificBtn.classList.add('hidden');
-                            }
-                        });
-                        alert(data.message);
-                    } else {
-                        alert('Error deleting records.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        });
 
         const channel = pusher.subscribe('imu-data');
 

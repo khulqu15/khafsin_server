@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
             $imu->y = rand(0, 100);
             $imu->z = rand(0, 100);
             $imu->location = 'Location ' . $i;
-            $imu->lat = rand(0, 100);
-            $imu->lon = rand(0, 100);
-            $imu->alt = rand(0, 100);
+            $imu->latitude = rand(0, 100);
+            $imu->longitude = rand(0, 100);
+            $imu->altitude = rand(0, 100);
             $imu->status = 'Status ' . $i;
             $imu->description = 'Description ' . $i;
             $imu->save();

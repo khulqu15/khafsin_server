@@ -29,13 +29,13 @@
                             <thead>
                               <tr>
                                 <th></th>
-                                <th>Tanggal Waktu</th>
+                                <th>Datetime</th>
                                 <th>X</th>
                                 <th>Y</th>
                                 <th>Z</th>
-                                <th>Lokasi</th>
+                                <th>Location</th>
                                 <th>Kondisi</th>
-                                <th>Aksi</th>
+                                <th>Action</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -114,7 +114,6 @@
                             const imuRow = document.querySelector(`tr[data-id="${id}"]`);
                             if (imuRow) {
                                 imuRow.remove();
-                                deleteSpesificBtn.classList.add('hidden');
                             }
                         });
                         alert(data.message);

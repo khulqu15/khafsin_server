@@ -114,7 +114,6 @@
                             const imuRow = document.querySelector(`tr[data-id="${id}"]`);
                             if (imuRow) {
                                 imuRow.remove();
-                                deleteSpesificBtn.classList.add('hidden');
                             }
                         });
                         alert(data.message);
